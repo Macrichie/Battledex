@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Battleground</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Input View -->
+  <section id="view-input" class="view">
+    <h1 class="title">Battleground</h1>
+    <p class="subtitle">Who would win in a fight?</p>
+    <div class="input-row">
+      <div class="fighter-input">
+        <label for="fighter1">Fighter 1</label>
+        <input type="text" id="fighter1" placeholder="e.g. Mike Tyson">
+      </div>
+      <span class="vs">vs</span>
+      <div class="fighter-input">
+        <label for="fighter2">Fighter 2</label>
+        <input type="text" id="fighter2" placeholder="e.g. Bruce Lee">
+      </div>
+    </div>
+    <button id="fight-btn" class="btn btn-fight">Fight</button>
+  </section>
+
+  <!-- Loading View -->
+  <section id="view-loading" class="view" hidden>
+    <div class="loader-wrap">
+      <div class="spinner"></div>
+      <p class="loader-text">Simulating fight...</p>
+    </div>
+  </section>
+
+  <!-- Result View -->
+  <section id="view-result" class="view" hidden>
+    <h2 class="result-label">Winner</h2>
+    <h1 id="result-winner" class="result-name"></h1>
+    <div id="result-image" class="result-image"></div>
+    <p id="result-reasoning" class="result-reasoning"></p>
+    <button id="back-btn" class="btn btn-secondary">Fight Again</button>
+  </section>
+
+  <!-- Error View -->
+  <section id="view-error" class="view" hidden>
+    <div class="error-wrap">
+      <span class="error-icon">!</span>
+      <h2 class="error-title">Something went wrong</h2>
+      <p id="error-message" class="error-text"></p>
+      <button id="error-back-btn" class="btn btn-secondary">Try Again</button>
+    </div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
