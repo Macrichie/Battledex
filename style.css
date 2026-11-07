@@ -39,6 +39,10 @@ body {
   text-align: center;
 }
 
+.view[hidden] {
+  display: none;
+}
+
 /* Input View */
 
 .title {
@@ -169,6 +173,13 @@ body {
   font-size: 1.05rem;
 }
 
+/* Inline loader inside result view */
+
+#result-loading {
+  min-height: 220px;
+  justify-content: center;
+}
+
 /* Result View */
 
 .result-label {
@@ -185,18 +196,89 @@ body {
   margin-top: 0.25rem;
 }
 
-.result-image {
-  width: 280px;
-  height: 280px;
+.fighters-display {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.fighter-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  max-width: 180px;
+  padding: 0.5rem;
+  border-radius: var(--radius);
+  border: 2px solid transparent;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.fighter-card.is-winner {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.fighter-img-wrap {
+  position: relative;
+  width: 160px;
+  height: 160px;
+}
+
+.fighter-img {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: var(--radius);
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  margin-top: 1.5rem;
+  display: block;
+}
+
+.img-status {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.75rem;
   color: var(--text-muted);
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.img-status.is-loading {
+  animation: imgpulse 1.4s ease-in-out infinite;
+}
+
+@keyframes imgpulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.fighter-card-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.vs-divider {
   font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.winner-announce {
+  margin-top: 1.25rem;
 }
 
 .result-reasoning {

@@ -26,21 +26,39 @@
     <button id="fight-btn" class="btn btn-fight">Fight</button>
   </section>
 
-  <!-- Loading View -->
-  <section id="view-loading" class="view" hidden>
-    <div class="loader-wrap">
-      <div class="spinner"></div>
-      <p class="loader-text">Simulating fight...</p>
-    </div>
-  </section>
-
-  <!-- Result View -->
+  <!-- Result View (loading state is inline) -->
   <section id="view-result" class="view" hidden>
-    <h2 class="result-label">Winner</h2>
-    <h1 id="result-winner" class="result-name"></h1>
-    <div id="result-image" class="result-image"></div>
-    <p id="result-reasoning" class="result-reasoning"></p>
-    <button id="back-btn" class="btn btn-secondary">Fight Again</button>
+    <!-- Spinner shown while fetching verdict -->
+    <div id="result-loading" class="loader-wrap">
+      <div class="spinner"></div>
+      <p class="loader-text">Judging the fight...</p>
+    </div>
+    <!-- Content shown once verdict arrives -->
+    <div id="result-content" hidden>
+      <div class="fighters-display">
+        <div class="fighter-card" id="card-a">
+          <div class="fighter-img-wrap">
+            <img id="img-a" class="fighter-img" src="" alt="">
+            <span id="status-a" class="img-status" hidden></span>
+          </div>
+          <span id="name-a" class="fighter-card-name"></span>
+        </div>
+        <span class="vs-divider">VS</span>
+        <div class="fighter-card" id="card-b">
+          <div class="fighter-img-wrap">
+            <img id="img-b" class="fighter-img" src="" alt="">
+            <span id="status-b" class="img-status" hidden></span>
+          </div>
+          <span id="name-b" class="fighter-card-name"></span>
+        </div>
+      </div>
+      <div class="winner-announce">
+        <h2 class="result-label">Winner</h2>
+        <h1 id="result-winner" class="result-name"></h1>
+      </div>
+      <p id="result-reasoning" class="result-reasoning"></p>
+      <button id="back-btn" class="btn btn-secondary">Fight Again</button>
+    </div>
   </section>
 
   <!-- Error View -->
