@@ -37,10 +37,15 @@ Milestone: Submitting two real fighters returns a verdict with reasoning and a g
 Lock Claude down to only judge fights and resist prompt injection.
 
 - Write a system prompt that scopes Claude strictly to fight judging
+- Claude must always name one winner — no ties, no refusals, no "it depends". Even identical matchups (same fighter vs themselves) must produce a winner
+- Verdict tone must be fun and playful while staying logical — 2 to 4 sentences max
 - Reject attempts to hijack the prompt (e.g. "ignore previous instructions")
+- All generated images must follow a shared art style template:
+  - Bold flat-color illustration, thick black outlines, dynamic action pose, dramatic lighting, video game character art style. Keep it centered, filling most of the frame, isolated on a plain solid light grey background with no scenery. Absolutely no text, words, letters, numbers, logos, watermarks, UI elements, borders or frames of any kind. Illustration only, nothing else on canvas.
+- Handle moderation-blocked as its own distinct error case, separate from a generic image failure (e.g. show a specific "content blocked" message instead of a generic error)
 - Test with adversarial inputs to confirm it holds
 
-Milestone: Claude refuses off-topic requests and prompt injection attempts while still judging fights correctly.
+Milestone: Claude refuses off-topic requests and prompt injection attempts, always picks a definitive winner (including identical matchups), delivers the verdict in a punchy 2–4 sentence format, and all images share a consistent art style. Moderation blocks surface a clear, specific message.
 
 ---
 
