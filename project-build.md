@@ -49,11 +49,11 @@ Milestone: Claude refuses off-topic requests and prompt injection attempts, alwa
 
 ---
 
-## Stage 4: Rate Limiting
+## Stage 4: Rate Limiting ✅
 Prevent abuse, built into the fight function.
 
-- Add rate limiting (5 req/min per IP) inside the fight function
-- Return a clear error when the limit is hit
+- [x] Add rate limiting (5 req/min per IP) inside the fight function
+- [x] Return a clear error when the limit is hit
 
 Milestone: Rapid-fire requests get blocked after 5 per minute.
 

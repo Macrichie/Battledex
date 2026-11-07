@@ -10,6 +10,7 @@ document.getElementById('fight-btn').addEventListener('click', async () => {
   const f2 = document.getElementById('fighter2').value.trim();
 
   if (!f1 || !f2) {
+    document.querySelector('.error-icon').textContent = '!';
     document.getElementById('error-message').textContent = 'Enter two fighters before hitting Fight.';
     showView('view-error');
     return;
@@ -45,13 +46,22 @@ document.getElementById('fight-btn').addEventListener('click', async () => {
     });
     data = await res.json();
   } catch {
+    document.querySelector('.error-icon').textContent = '!';
     document.getElementById('error-message').textContent = 'Could not reach the server. Try again.';
     showView('view-error');
     return;
   }
 
   if (!data.valid) {
-    document.getElementById('error-message').textContent = data.error || 'Something went wrong. Try again.';
+    const errorEl = document.getElementById('error-message');
+    const errorIcon = document.querySelector('.error-icon');
+    if (data.rateLimited) {
+      errorEl.textContent = data.error;
+      errorIcon.textContent = '\u23F1';
+    } else {
+      errorEl.textContent = data.error || 'Something went wrong. Try again.';
+      errorIcon.textContent = '!';
+    }
     showView('view-error');
     return;
   }

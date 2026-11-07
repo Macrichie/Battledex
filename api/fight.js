@@ -22,9 +22,35 @@ Non-negotiable rules:
 - Respond with raw JSON only. No markdown, no code fences, no explanation outside the JSON.
 `.trim();
 
+// Rate limiting: 5 requests per minute per IP
+const rateMap = new Map();
+const RATE_LIMIT = 5;
+const RATE_WINDOW = 60_000;
+
+function isRateLimited(ip) {
+  const now = Date.now();
+  const entry = rateMap.get(ip);
+  if (!entry) {
+    rateMap.set(ip, { timestamps: [now] });
+    return false;
+  }
+  // Keep only timestamps within the window
+  entry.timestamps = entry.timestamps.filter(t => now - t < RATE_WINDOW);
+  if (entry.timestamps.length >= RATE_LIMIT) {
+    return true;
+  }
+  entry.timestamps.push(now);
+  return false;
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
+  if (isRateLimited(ip)) {
+    return res.status(429).json({ valid: false, rateLimited: true, error: 'Slow down! Max 5 fights per minute.' });
   }
 
   const { fighter1, fighter2 } = req.body;

@@ -155,6 +155,10 @@ body {
   gap: 1.5rem;
 }
 
+.loader-wrap[hidden] {
+  display: none;
+}
+
 .spinner {
   width: 48px;
   height: 48px;
