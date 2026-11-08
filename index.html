@@ -28,12 +28,25 @@
     <a id="dex-link" href="/battledex.html" class="dex-link" hidden>BattleDex <span id="dex-count" class="dex-count">0</span></a>
   </section>
 
+  <!-- Confetti canvas -->
+  <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
+
   <!-- Result View (loading state is inline) -->
   <section id="view-result" class="view" hidden>
     <!-- Spinner shown while fetching verdict -->
     <div id="result-loading" class="loader-wrap">
-      <div class="spinner"></div>
-      <p class="loader-text">Judging the fight...</p>
+      <div class="loader-fighters">
+        <span id="loader-name-a" class="loader-fighter-name"></span>
+        <div class="loader-clash">
+          <div class="clash-ring"></div>
+          <span class="clash-vs">VS</span>
+        </div>
+        <span id="loader-name-b" class="loader-fighter-name"></span>
+      </div>
+      <div class="loader-bar-track">
+        <div class="loader-bar-fill"></div>
+      </div>
+      <p id="loader-fact" class="loader-fact"></p>
     </div>
     <!-- Content shown once verdict arrives -->
     <div id="result-content" hidden>

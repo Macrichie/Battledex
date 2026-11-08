@@ -5,6 +5,66 @@ function showView(id) {
   document.getElementById(id).hidden = false;
 }
 
+// --- Confetti ---
+
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ['#e63946', '#22c55e', '#f59e0b', '#3b82f6', '#a855f7', '#ec4899'];
+  const pieces = [];
+  const count = 120;
+
+  for (let i = 0; i < count; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * -canvas.height,
+      w: Math.random() * 8 + 4,
+      h: Math.random() * 4 + 2,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      vx: (Math.random() - 0.5) * 3,
+      vy: Math.random() * 4 + 2,
+      spin: Math.random() * 0.2 - 0.1,
+      angle: Math.random() * Math.PI * 2,
+      opacity: 1,
+    });
+  }
+
+  let frame = 0;
+  const maxFrames = 180;
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    frame++;
+
+    for (const p of pieces) {
+      p.x += p.vx;
+      p.vy += 0.04;
+      p.y += p.vy;
+      p.angle += p.spin;
+      if (frame > maxFrames - 40) p.opacity = Math.max(0, p.opacity - 0.025);
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.angle);
+      ctx.globalAlpha = p.opacity;
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    }
+
+    if (frame < maxFrames) {
+      requestAnimationFrame(draw);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  draw();
+}
+
 // --- BattleDex storage ---
 
 const DEX_KEY = 'battledex';
@@ -140,6 +200,53 @@ function showFightResult(fight) {
   showView('view-result');
 }
 
+// --- Loading facts ---
+
+const FIGHT_FACTS = [
+  (a, b) => `${a} and ${b} have never faced off... until now.`,
+  (a, b) => `Analyzing fight records for ${a} and ${b}...`,
+  (a, b) => `Who has the stronger chin? ${a} or ${b}?`,
+  (a, b) => `Calculating reach advantage between ${a} and ${b}...`,
+  (a, b) => `Both fighters are warming up in the tunnel...`,
+  (a, b) => `The crowd is going wild for ${a} vs ${b}!`,
+  (a, b) => `Reviewing tape on ${a}... looking dangerous.`,
+  (a, b) => `${b} has entered the arena. The pressure is real.`,
+  (a, b) => `Tale of the tape: comparing size, speed, and power...`,
+  (a, b) => `Judges are taking their seats ringside...`,
+  (a, b) => `${a} looks focused. ${b} looks hungry.`,
+  (a, b) => `This could be the fight of the century...`,
+  (a, b) => `Breaking down peak athletic performance...`,
+  (a, b) => `Consulting the fight gods for a verdict...`,
+  (a, b) => `The ref is giving final instructions...`,
+];
+
+let factInterval = null;
+
+function startFactTicker(f1, f2) {
+  const factEl = document.getElementById('loader-fact');
+  const used = new Set();
+
+  function showNext() {
+    let idx;
+    do { idx = Math.floor(Math.random() * FIGHT_FACTS.length); }
+    while (used.has(idx) && used.size < FIGHT_FACTS.length);
+    used.add(idx);
+    if (used.size >= FIGHT_FACTS.length) used.clear();
+
+    factEl.style.animation = 'none';
+    factEl.offsetHeight; // trigger reflow
+    factEl.style.animation = '';
+    factEl.textContent = FIGHT_FACTS[idx](f1, f2);
+  }
+
+  showNext();
+  factInterval = setInterval(showNext, 3000);
+}
+
+function stopFactTicker() {
+  if (factInterval) { clearInterval(factInterval); factInterval = null; }
+}
+
 document.getElementById('fight-btn').addEventListener('click', async () => {
   const f1 = document.getElementById('fighter1').value.trim();
   const f2 = document.getElementById('fighter2').value.trim();
@@ -154,6 +261,11 @@ document.getElementById('fight-btn').addEventListener('click', async () => {
   // Show result view in loading state
   document.getElementById('result-loading').hidden = false;
   document.getElementById('result-content').hidden = true;
+
+  // Set fighter names in loader
+  document.getElementById('loader-name-a').textContent = f1;
+  document.getElementById('loader-name-b').textContent = f2;
+  startFactTicker(f1, f2);
 
   ['img-a', 'img-b'].forEach(id => {
     const el = document.getElementById(id);
@@ -189,6 +301,7 @@ document.getElementById('fight-btn').addEventListener('click', async () => {
   const [data, imgA, imgB] = await Promise.all([verdictPromise, imgAPromise, imgBPromise]);
 
   if (!data) {
+    stopFactTicker();
     document.querySelector('.error-icon').textContent = '!';
     document.getElementById('error-message').textContent = 'Could not reach the server. Try again.';
     showView('view-error');
@@ -196,6 +309,7 @@ document.getElementById('fight-btn').addEventListener('click', async () => {
   }
 
   if (!data.valid) {
+    stopFactTicker();
     const errorEl = document.getElementById('error-message');
     const errorIcon = document.querySelector('.error-icon');
     if (data.rateLimited) {
@@ -258,8 +372,10 @@ document.getElementById('fight-btn').addEventListener('click', async () => {
     imgB: imgB.url,
   });
 
+  stopFactTicker();
   document.getElementById('result-loading').hidden = true;
   document.getElementById('result-content').hidden = false;
+  launchConfetti();
 });
 
 // Save button handlers

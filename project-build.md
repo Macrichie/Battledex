@@ -74,13 +74,13 @@ Milestone: A fighter can be saved and viewed in the BattleDex with their label a
 
 ---
 
-## Stage 6: Polish + Edge Cases
+## Stage 6: Polish + Edge Cases ✅
 Tighten the experience before considering it shippable.
 
-- Loading states for verdict and image generation
-- Error states for failed API calls
-- Image downsizing before writing to LocalStorage
-- Basic responsive layout for mobile
+- [x] Loading states for verdict and image generation
+- [x] Error states for failed API calls
+- [x] Image downsizing before writing to LocalStorage
+- [x] Basic responsive layout for mobile
 
 Milestone: The full flow works cleanly on desktop and mobile with no broken states.
 
