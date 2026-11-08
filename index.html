@@ -24,6 +24,8 @@
       </div>
     </div>
     <button id="fight-btn" class="btn btn-fight">Fight</button>
+
+    <a id="dex-link" href="/battledex.html" class="dex-link" hidden>BattleDex <span id="dex-count" class="dex-count">0</span></a>
   </section>
 
   <!-- Result View (loading state is inline) -->
@@ -42,6 +44,7 @@
             <span id="status-a" class="img-status" hidden></span>
           </div>
           <span id="name-a" class="fighter-card-name"></span>
+          <button id="save-a" class="btn btn-save" hidden>Save</button>
         </div>
         <span class="vs-divider">VS</span>
         <div class="fighter-card" id="card-b">
@@ -50,6 +53,7 @@
             <span id="status-b" class="img-status" hidden></span>
           </div>
           <span id="name-b" class="fighter-card-name"></span>
+          <button id="save-b" class="btn btn-save" hidden>Save</button>
         </div>
       </div>
       <div class="winner-announce">

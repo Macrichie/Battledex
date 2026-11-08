@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BattleDex</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="dex-page">
+    <h1 class="title">BattleDex</h1>
+    <p class="subtitle" id="dex-subtitle">Your saved fighters</p>
+
+    <div class="dex-actions-bar">
+      <a href="/" class="btn btn-fight btn-sm">New Fight</a>
+      <button id="dex-last-fight" class="btn btn-secondary btn-sm" hidden>Last Fight</button>
+      <button id="dex-clear-all" class="btn btn-secondary btn-sm" hidden>Clear All</button>
+    </div>
+
+    <div id="dex-gallery" class="dex-gallery dex-gallery-full"></div>
+
+    <p id="dex-empty" class="dex-empty" hidden>No fighters saved yet. Win a fight and save your favorites!</p>
+  </div>
+
+  <script src="battledex.js"></script>
+</body>
+</html>

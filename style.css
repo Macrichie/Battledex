@@ -25,6 +25,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 2rem 0;
 }
 
 /* Views */
@@ -258,6 +259,11 @@ body {
   padding: 0.5rem;
 }
 
+.img-status[hidden],
+.fighter-img[hidden] {
+  display: none;
+}
+
 .img-status.is-loading {
   animation: imgpulse 1.4s ease-in-out infinite;
 }
@@ -330,4 +336,174 @@ body {
 
 #error-back-btn {
   margin-top: 0.75rem;
+}
+
+/* Save Button */
+
+.btn-save {
+  padding: 0.35rem 1rem;
+  font-size: 0.75rem;
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.btn-save:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.btn-save.is-saved {
+  border-color: var(--accent);
+  color: var(--accent);
+  pointer-events: none;
+}
+
+/* BattleDex link on main page */
+
+.dex-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem 1.25rem;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.dex-link:hover {
+  border-color: var(--text-muted);
+  color: var(--text);
+}
+
+.dex-link[hidden] {
+  display: none;
+}
+
+.dex-count {
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.1rem 0.45rem;
+  border-radius: 10px;
+  min-width: 1.2rem;
+  text-align: center;
+}
+
+/* BattleDex page */
+
+.dex-page {
+  width: 100%;
+  max-width: 600px;
+  padding: 2rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.dex-actions-bar {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.dex-actions-bar .btn-sm {
+  margin-top: 0;
+}
+
+.dex-empty {
+  color: var(--text-muted);
+  margin-top: 2rem;
+  font-size: 0.95rem;
+}
+
+.dex-empty[hidden] {
+  display: none;
+}
+
+.btn-sm {
+  padding: 0.45rem 1.25rem;
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+
+.dex-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  width: 100%;
+}
+
+.dex-gallery-full {
+  max-width: 540px;
+}
+
+/* Trading card style */
+
+.dex-entry {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  position: relative;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.dex-entry:hover {
+  border-color: var(--text-muted);
+}
+
+.dex-entry img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+}
+
+.dex-entry-name {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+  padding: 0.4rem 0.35rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dex-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.dex-entry:hover .dex-remove {
+  opacity: 1;
+}
+
+.dex-remove:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }

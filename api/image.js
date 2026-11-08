@@ -18,10 +18,12 @@ module.exports = async function handler(req, res) {
         'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'dall-e-3',
+        model: 'gpt-image-2.5-sunburst',
         prompt: `${fighterName.trim()}. ${IMAGE_STYLE}`,
         n: 1,
         size: '1024x1024',
+        quality: 'low',
+        output_format: 'webp',
       }),
     });
 
@@ -32,7 +34,14 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({ url: null, blocked });
     }
 
-    return res.status(200).json({ url: data.data?.[0]?.url ?? null, blocked: false });
+    const b64 = data.data?.[0]?.b64_json;
+    if (b64) {
+      return res.status(200).json({ url: `data:image/webp;base64,${b64}`, blocked: false });
+    }
+
+    // Fallback: check for url format
+    const url = data.data?.[0]?.url;
+    return res.status(200).json({ url: url ?? null, blocked: false });
   } catch {
     return res.status(200).json({ url: null, blocked: false });
   }

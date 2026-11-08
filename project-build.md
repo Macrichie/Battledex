@@ -59,15 +59,18 @@ Milestone: Rapid-fire requests get blocked after 5 per minute.
 
 ---
 
-## Stage 5: BattleDex — Save & Display
+## Stage 5: BattleDex — Save & Display ✅
 Let users save individual fighters.
 
-- Build a BattleDex UI section on the page (collapsed or below the fight area)
-- After a fight, give the user an option to save each fighter to the BattleDex
-- On save: store fighter label and downsized image to LocalStorage
-- Display saved fighters in the BattleDex as a gallery of labels and images
+- [x] Build a BattleDex UI section on the page (collapsed or below the fight area)
+- [x] After a fight, give the user an option to save each fighter to the BattleDex
+- [x] On save: store fighter label and downsized image to LocalStorage
+- [x] Display saved fighters in the BattleDex as a gallery of labels and images
+- [x] Style each saved fighter as a mini trading card (image on top, name below, no click-to-view)
+- [x] Add a "Last Fight" button in the BattleDex to jump back to your most recent fight result
+- [x] Add a "New Fight" button in the BattleDex to start a fresh fight
 
-Milestone: A fighter can be saved and viewed in the BattleDex with their label and image.
+Milestone: A fighter can be saved and viewed in the BattleDex with their label and image. Cards look like mini trading cards. Users can revisit their last fight or start a new one from the dex.
 
 ---
 
