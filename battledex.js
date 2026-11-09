@@ -66,12 +66,24 @@ lastFightBtn.addEventListener('click', () => {
   window.location.href = '/?lastfight=1';
 });
 
-// Clear All button
+// Clear All button — custom modal
 const clearBtn = document.getElementById('dex-clear-all');
-clearBtn.addEventListener('click', () => {
-  if (!confirm('Remove all saved fighters?')) return;
+const clearModal = document.getElementById('clear-modal');
+
+clearBtn.addEventListener('click', () => { clearModal.hidden = false; });
+
+document.getElementById('clear-confirm').addEventListener('click', () => {
+  clearModal.hidden = true;
   saveDex([]);
   renderDex();
+});
+
+document.getElementById('clear-cancel').addEventListener('click', () => {
+  clearModal.hidden = true;
+});
+
+clearModal.addEventListener('click', (e) => {
+  if (e.target === clearModal) clearModal.hidden = true;
 });
 
 renderDex();

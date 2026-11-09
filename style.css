@@ -90,10 +90,10 @@ input::placeholder{color:var(--text-dim)}
   background:radial-gradient(ellipse at 50% 25%,var(--purple) 0%,var(--surface) 50%,var(--bg2) 100%);
   display:none;flex-direction:column;align-items:center;
 }
-#view-input.active{display:flex}
+#view-input.active{display:flex;justify-content:center}
 
 .dex-nav{
-  position:absolute;top:28px;right:40px;display:flex;align-items:center;gap:12px;
+  position:absolute;top:36px;right:40px;display:flex;align-items:center;gap:12px;
   background:var(--bg);border:4px solid var(--bg);box-shadow:0 0 0 3px var(--gold);
   padding:10px 16px;cursor:pointer;z-index:2;text-decoration:none;
 }
@@ -101,7 +101,7 @@ input::placeholder{color:var(--text-dim)}
 .dex-nav-label{font-family:Bungee;font-size:18px;color:var(--gold);transition:color .15s}
 .dex-nav-count{font-family:'Press Start 2P';font-size:12px;background:var(--red);color:var(--text);padding:6px 8px}
 
-.input-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding-top:80px;padding-bottom:60px;width:100%}
+.input-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:60px 0;width:100%}
 
 .choose-text{font-family:'Press Start 2P';font-size:14px;color:var(--gold);letter-spacing:.12em;animation:bgBlink 1.2s steps(1) infinite}
 
@@ -234,7 +234,7 @@ input::placeholder{color:var(--text-dim)}
 #view-result{
   background:radial-gradient(ellipse at 28% 50%,#3d1885 0%,var(--surface) 50%,var(--bg2) 100%);
 }
-#view-result.active{display:block}
+#view-result.active{display:flex;flex-direction:column;justify-content:center}
 
 .result-grid-floor{
   position:absolute;left:-30%;right:-30%;bottom:-8%;height:42%;
@@ -279,9 +279,10 @@ input::placeholder{color:var(--text-dim)}
 .result-winner-card{
   position:relative;width:clamp(240px,50%,340px);background:var(--gold);border:6px solid var(--gold);
   animation:bgPulse 1.6s ease-in-out infinite;transform:rotate(-2deg);display:flex;flex-direction:column;
+  margin-top:44px;
 }
 .result-winner-badge{
-  position:absolute;top:-30px;left:50%;transform:translateX(-50%) rotate(-3deg);
+  position:absolute;top:-44px;left:50%;transform:translateX(-50%) rotate(-3deg);
   background:var(--red);border:5px solid var(--outline);box-shadow:5px 5px 0 var(--outline);
   padding:6px 22px;font-family:Bungee;font-size:28px;color:var(--gold);
   -webkit-text-stroke:2px var(--outline);paint-order:stroke fill;white-space:nowrap;z-index:2;
@@ -409,7 +410,7 @@ input::placeholder{color:var(--text-dim)}
 .error-back-btn{margin-top:44px;height:76px;padding:0 40px;font-size:32px}
 
 /* ---------- BATTLEDEX PAGE ---------- */
-.dex-page{position:relative;z-index:1;padding:44px 48px 60px;display:flex;flex-direction:column;gap:36px;min-height:100vh}
+.dex-page{position:relative;z-index:1;padding:44px 48px 60px;display:flex;flex-direction:column;gap:36px;min-height:100vh;justify-content:center}
 .dex-header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap}
 .dex-header-left{display:flex;flex-direction:column;gap:12px}
 .dex-title{
@@ -450,6 +451,36 @@ input::placeholder{color:var(--text-dim)}
 .dex-empty-state{margin-top:90px;display:flex;flex-direction:column;align-items:center;gap:20px}
 .dex-empty-title{font-family:Bungee;font-size:clamp(28px,4vw,44px);color:var(--text-dim)}
 .dex-empty-text{font-family:Barlow;font-weight:600;font-size:clamp(16px,2vw,22px);color:var(--text-muted);text-align:center}
+
+/* ---------- MODAL ---------- */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(11,6,20,.85);z-index:50;
+  display:flex;align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay[hidden]{display:none !important}
+.modal-box{
+  background:var(--surface);border:6px solid var(--outline);box-shadow:12px 12px 0 var(--outline);
+  padding:40px 36px 32px;max-width:480px;width:100%;display:flex;flex-direction:column;align-items:center;gap:20px;
+  position:relative;
+}
+.modal-icon{
+  font-size:52px;line-height:1;
+  width:90px;height:90px;background:var(--red);border:5px solid var(--outline);
+  box-shadow:5px 5px 0 var(--outline);transform:rotate(45deg);
+  display:flex;align-items:center;justify-content:center;
+}
+.modal-icon::after{content:'';display:block;transform:rotate(-45deg)}
+.modal-title{
+  font-family:Bungee;font-weight:400;font-size:clamp(22px,4vw,32px);color:var(--gold);
+  -webkit-text-stroke:2px var(--outline);paint-order:stroke fill;
+  text-shadow:4px 4px 0 var(--outline);text-align:center;line-height:1.2;
+}
+.modal-text{
+  font-family:Barlow;font-weight:600;font-size:clamp(15px,1.6vw,18px);color:var(--text-muted);
+  text-align:center;line-height:1.5;
+}
+.modal-btns{display:flex;gap:16px;margin-top:8px;flex-wrap:wrap;justify-content:center}
+.modal-btn{height:60px;padding:0 28px;font-size:22px}
 
 /* ---------- CONFETTI ---------- */
 .confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:100}
