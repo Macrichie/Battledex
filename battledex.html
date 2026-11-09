@@ -4,24 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BattleDex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Press+Start+2P&family=Barlow:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="dex-page">
-    <h1 class="title">BattleDex</h1>
-    <p class="subtitle" id="dex-subtitle">Your saved fighters</p>
+  <section id="view-dex" class="view active" style="background:radial-gradient(ellipse at 50% 0%,#34157a 0%,#1a0b3d 55%,#0d0620 100%)">
+    <div class="dex-page">
+      <div class="dex-header">
+        <div class="dex-header-left">
+          <h1 class="dex-title">BATTLEDEX</h1>
+          <span class="dex-subtitle" id="dex-subtitle">Your saved fighters</span>
+        </div>
+        <div class="dex-header-btns">
+          <a href="/" class="abtn abtn-gold dex-btn-new">New fight</a>
+          <button id="dex-last-fight" class="abtn-outline dex-btn-last" style="box-shadow:0 0 0 3px #2e8bff;color:#2e8bff" hidden>Last fight</button>
+          <button id="dex-clear-all" class="abtn-outline dex-btn-clear" style="box-shadow:0 0 0 3px #ff3a4c;color:#ff3a4c" hidden>Clear all</button>
+        </div>
+      </div>
 
-    <div class="dex-actions-bar">
-      <a href="/" class="btn btn-fight btn-sm">New Fight</a>
-      <button id="dex-last-fight" class="btn btn-secondary btn-sm" hidden>Last Fight</button>
-      <button id="dex-clear-all" class="btn btn-secondary btn-sm" hidden>Clear All</button>
+      <div id="dex-gallery" class="dex-grid"></div>
+
+      <div id="dex-empty" class="dex-empty-state" hidden>
+        <span class="dex-empty-title">No fighters yet</span>
+        <span class="dex-empty-text">No fighters saved yet. Win a fight and save your favorites!</span>
+      </div>
     </div>
-
-    <div id="dex-gallery" class="dex-gallery dex-gallery-full"></div>
-
-    <p id="dex-empty" class="dex-empty" hidden>No fighters saved yet. Win a fight and save your favorites!</p>
-  </div>
+    <div class="scanlines"></div>
+  </section>
 
   <script src="battledex.js"></script>
 </body>

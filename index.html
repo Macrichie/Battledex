@@ -4,89 +4,158 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Battleground</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Press+Start+2P&family=Barlow:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Input View -->
-  <section id="view-input" class="view">
-    <h1 class="title">Battleground</h1>
-    <p class="subtitle">Who would win in a fight?</p>
-    <div class="input-row">
-      <div class="fighter-input">
-        <label for="fighter1">Fighter 1</label>
-        <input type="text" id="fighter1" placeholder="e.g. Mike Tyson">
+  <!-- ===== INPUT VIEW ===== -->
+  <section id="view-input" class="view active">
+    <div class="grid-floor"></div>
+    <a id="dex-link" href="/battledex.html" class="dex-nav" hidden>
+      <span class="dex-nav-label">BattleDex</span>
+      <span id="dex-count" class="dex-nav-count">0</span>
+    </a>
+    <div class="input-content">
+      <div class="choose-text">Choose your fighters</div>
+      <h1 class="main-title">BATTLEGROUND</h1>
+      <p class="main-subtitle">Who would win in a fight?</p>
+      <div class="fighters-row">
+        <div class="input-card input-card-p1">
+          <label for="fighter1">P1 · Fighter 1</label>
+          <input type="text" id="fighter1" placeholder="e.g. Mike Tyson">
+        </div>
+        <div class="vs-diamond"><span>VS</span></div>
+        <div class="input-card input-card-p2">
+          <label for="fighter2">Fighter 2 · P2</label>
+          <input type="text" id="fighter2" placeholder="e.g. Bruce Lee">
+        </div>
       </div>
-      <span class="vs">vs</span>
-      <div class="fighter-input">
-        <label for="fighter2">Fighter 2</label>
-        <input type="text" id="fighter2" placeholder="e.g. Bruce Lee">
+      <button id="fight-btn" class="abtn abtn-gold fight-btn">FIGHT!</button>
+      <div class="input-footer">Real athletes only. Any sport, any era.</div>
+    </div>
+    <div class="scanlines"></div>
+  </section>
+
+  <!-- ===== LOADING VIEW ===== -->
+  <section id="view-loading" class="view">
+    <div class="load-split-red"></div>
+    <div class="load-split-blue"></div>
+    <div class="load-logo">BATTLEGROUND</div>
+    <div class="load-fighter load-fighter-left">
+      <span class="load-fighter-tag load-fighter-tag-p1">P1</span>
+      <div class="load-fighter-img">
+        <span class="shimmer" id="load-img-status-a">Generating art...</span>
+        <img id="load-img-a" hidden>
+      </div>
+      <div class="load-fighter-name" id="loader-name-a"></div>
+    </div>
+    <div class="load-fighter load-fighter-right">
+      <span class="load-fighter-tag load-fighter-tag-p2">P2</span>
+      <div class="load-fighter-img">
+        <span class="shimmer" id="load-img-status-b">Generating art...</span>
+        <img id="load-img-b" hidden>
+      </div>
+      <div class="load-fighter-name" id="loader-name-b"></div>
+    </div>
+    <div class="load-vs-ring"></div>
+    <div class="load-vs-text">VS</div>
+    <div class="load-bottom">
+      <div class="load-status">Judges deliberating</div>
+      <div class="load-bar"><div class="load-bar-fill"></div></div>
+      <div class="load-fact-box">
+        <span id="loader-fact" class="load-fact"></span>
       </div>
     </div>
-    <button id="fight-btn" class="btn btn-fight">Fight</button>
+    <div class="scanlines"></div>
+  </section>
 
-    <a id="dex-link" href="/battledex.html" class="dex-link" hidden>BattleDex <span id="dex-count" class="dex-count">0</span></a>
+  <!-- ===== RESULT VIEW ===== -->
+  <section id="view-result" class="view">
+    <div class="result-grid-floor"></div>
+
+    <!-- Health bars -->
+    <div class="health-bar-row">
+      <div class="health-bar-side">
+        <div class="health-bar-header">
+          <span class="health-bar-name health-bar-name-winner" id="hb-name-a"></span>
+          <span class="health-bar-tag health-bar-tag-p1">P1</span>
+        </div>
+        <div class="health-bar-track"><div class="health-bar-fill" id="hb-fill-a"></div></div>
+      </div>
+      <div class="ko-badge">KO</div>
+      <div class="health-bar-side">
+        <div class="health-bar-header">
+          <span class="health-bar-tag health-bar-tag-p2">P2</span>
+          <span class="health-bar-name health-bar-name-loser" id="hb-name-b"></span>
+        </div>
+        <div class="health-bar-track"><div class="health-bar-fill" id="hb-fill-b"></div></div>
+      </div>
+    </div>
+
+    <!-- Cards + verdict -->
+    <div class="result-body">
+      <div class="result-cards">
+        <div class="result-rays"></div>
+        <!-- Winner card -->
+        <div class="result-winner-card" id="card-winner">
+          <div class="result-winner-badge">WINNER</div>
+          <div class="result-card-img">
+            <img id="img-winner" hidden>
+            <span class="placeholder" id="status-winner">Generating...</span>
+          </div>
+          <div class="result-card-footer">
+            <span class="result-card-name" id="name-winner"></span>
+            <button id="save-winner" class="result-save-btn" hidden>Save</button>
+          </div>
+        </div>
+        <!-- Loser card -->
+        <div class="result-loser-card" id="card-loser">
+          <div class="result-loser-img">
+            <img id="img-loser" hidden>
+            <span class="placeholder" id="status-loser">Generating...</span>
+          </div>
+          <div class="ko-stamp"><span>K.O.</span></div>
+          <div class="result-card-footer">
+            <span class="result-card-name result-card-name-loser" id="name-loser"></span>
+            <button id="save-loser" class="result-save-btn-loser" hidden>Save</button>
+          </div>
+        </div>
+      </div>
+      <div class="result-verdict">
+        <span class="result-verdict-label">Winner</span>
+        <h2 class="result-verdict-name" id="result-winner"></h2>
+        <div class="result-verdict-box">
+          <span class="result-verdict-tag">Judge's verdict</span>
+          <p class="result-verdict-text" id="result-reasoning"></p>
+        </div>
+        <button id="back-btn" class="abtn abtn-red result-fight-again">Fight again</button>
+      </div>
+    </div>
+    <div class="scanlines"></div>
+  </section>
+
+  <!-- ===== ERROR VIEW ===== -->
+  <section id="view-error" class="view">
+    <div class="error-stripe error-stripe-top"></div>
+    <div class="error-stripe error-stripe-bottom"></div>
+    <div class="error-content">
+      <div class="error-diamond">
+        <span class="error-diamond-icon" id="error-icon" style="font-size:72px">!</span>
+      </div>
+      <h2 class="error-title">FIGHT CALLED OFF!</h2>
+      <div class="error-box">
+        <span class="error-tag" id="error-tag">Error</span>
+        <p class="error-msg" id="error-message"></p>
+      </div>
+      <button id="error-back-btn" class="abtn abtn-gold error-back-btn">Back to the Ring</button>
+    </div>
+    <div class="scanlines"></div>
   </section>
 
   <!-- Confetti canvas -->
   <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
-
-  <!-- Result View (loading state is inline) -->
-  <section id="view-result" class="view" hidden>
-    <!-- Spinner shown while fetching verdict -->
-    <div id="result-loading" class="loader-wrap">
-      <div class="loader-fighters">
-        <span id="loader-name-a" class="loader-fighter-name"></span>
-        <div class="loader-clash">
-          <div class="clash-ring"></div>
-          <span class="clash-vs">VS</span>
-        </div>
-        <span id="loader-name-b" class="loader-fighter-name"></span>
-      </div>
-      <div class="loader-bar-track">
-        <div class="loader-bar-fill"></div>
-      </div>
-      <p id="loader-fact" class="loader-fact"></p>
-    </div>
-    <!-- Content shown once verdict arrives -->
-    <div id="result-content" hidden>
-      <div class="fighters-display">
-        <div class="fighter-card" id="card-a">
-          <div class="fighter-img-wrap">
-            <img id="img-a" class="fighter-img" src="" alt="">
-            <span id="status-a" class="img-status" hidden></span>
-          </div>
-          <span id="name-a" class="fighter-card-name"></span>
-          <button id="save-a" class="btn btn-save" hidden>Save</button>
-        </div>
-        <span class="vs-divider">VS</span>
-        <div class="fighter-card" id="card-b">
-          <div class="fighter-img-wrap">
-            <img id="img-b" class="fighter-img" src="" alt="">
-            <span id="status-b" class="img-status" hidden></span>
-          </div>
-          <span id="name-b" class="fighter-card-name"></span>
-          <button id="save-b" class="btn btn-save" hidden>Save</button>
-        </div>
-      </div>
-      <div class="winner-announce">
-        <h2 class="result-label">Winner</h2>
-        <h1 id="result-winner" class="result-name"></h1>
-      </div>
-      <p id="result-reasoning" class="result-reasoning"></p>
-      <button id="back-btn" class="btn btn-secondary">Fight Again</button>
-    </div>
-  </section>
-
-  <!-- Error View -->
-  <section id="view-error" class="view" hidden>
-    <div class="error-wrap">
-      <span class="error-icon">!</span>
-      <h2 class="error-title">Fight Called Off!</h2>
-      <p id="error-message" class="error-text"></p>
-      <button id="error-back-btn" class="btn btn-secondary">Back to the Ring</button>
-    </div>
-  </section>
 
   <script src="app.js"></script>
 </body>

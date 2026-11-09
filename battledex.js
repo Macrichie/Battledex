@@ -1,5 +1,6 @@
 const DEX_KEY = 'battledex';
 const LAST_FIGHT_KEY = 'lastFight';
+const COLORS = ['#ff3a4c', '#2e8bff', '#ffd23f', '#b56bff'];
 
 function loadDex() {
   try { return JSON.parse(localStorage.getItem(DEX_KEY)) || []; }
@@ -18,18 +19,27 @@ function renderDex() {
 
   gallery.innerHTML = '';
   empty.hidden = dex.length > 0;
+  gallery.hidden = dex.length === 0;
   document.getElementById('dex-clear-all').hidden = dex.length === 0;
   subtitle.textContent = dex.length > 0
     ? `${dex.length} fighter${dex.length !== 1 ? 's' : ''} saved`
     : 'Your saved fighters';
 
   dex.forEach((entry, i) => {
+    const color = COLORS[i % COLORS.length];
+    const num = '#' + String(i + 1).padStart(3, '0');
     const div = document.createElement('div');
-    div.className = 'dex-entry';
+    div.className = 'dex-card';
+    div.style.background = color;
     div.innerHTML = `
-      <img src="${entry.image}" alt="${entry.name}">
-      <span class="dex-entry-name">${entry.name}</span>
-      <button class="dex-remove" data-index="${i}">&times;</button>
+      <div class="dex-card-header">
+        <span class="dex-card-num">${num}</span>
+        <button class="dex-card-remove" data-index="${i}">&times;</button>
+      </div>
+      <div class="dex-card-img">
+        <img src="${entry.image}" alt="${entry.name}">
+      </div>
+      <div class="dex-card-name">${entry.name}</div>
     `;
     gallery.appendChild(div);
   });
@@ -37,7 +47,7 @@ function renderDex() {
 
 // Remove entry
 document.getElementById('dex-gallery').addEventListener('click', (e) => {
-  const btn = e.target.closest('.dex-remove');
+  const btn = e.target.closest('.dex-card-remove');
   if (!btn) return;
   const dex = loadDex();
   dex.splice(Number(btn.dataset.index), 1);
@@ -45,7 +55,7 @@ document.getElementById('dex-gallery').addEventListener('click', (e) => {
   renderDex();
 });
 
-// Last Fight button — navigate to index with param to restore last fight
+// Last Fight button
 const lastFightBtn = document.getElementById('dex-last-fight');
 try {
   const lastFight = JSON.parse(localStorage.getItem(LAST_FIGHT_KEY));

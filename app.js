@@ -1,8 +1,8 @@
-const views = document.querySelectorAll('section[id^="view-"]');
+const views = document.querySelectorAll('.view');
 
 function showView(id) {
-  views.forEach(v => v.hidden = true);
-  document.getElementById(id).hidden = false;
+  views.forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
 
 // --- Confetti ---
@@ -13,7 +13,7 @@ function launchConfetti() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
-  const colors = ['#e63946', '#22c55e', '#f59e0b', '#3b82f6', '#a855f7', '#ec4899'];
+  const colors = ['#ff3a4c', '#ffd23f', '#2e8bff', '#b56bff', '#22c55e', '#ec4899'];
   const pieces = [];
   const count = 120;
 
@@ -153,24 +153,51 @@ function preloadIntoImg(imgEl, url) {
   });
 }
 
+// --- Error display helper ---
+
+function showError(msg, tag, icon, iconSize) {
+  document.getElementById('error-icon').textContent = icon || '!';
+  document.getElementById('error-icon').style.fontSize = iconSize || '72px';
+  document.getElementById('error-tag').textContent = tag || 'Error';
+  document.getElementById('error-message').textContent = msg;
+  showView('view-error');
+}
+
 // Populate the result view from a fight object (used by both live fights and last-fight restore)
 function showFightResult(fight) {
-  const imgElA = document.getElementById('img-a');
-  const imgElB = document.getElementById('img-b');
-  const statusA = document.getElementById('status-a');
-  const statusB = document.getElementById('status-b');
+  // Health bar names
+  document.getElementById('hb-name-a').textContent = fight.f1;
+  document.getElementById('hb-name-b').textContent = fight.f2;
 
-  document.getElementById('name-a').textContent = fight.f1;
-  document.getElementById('name-b').textContent = fight.f2;
-  document.getElementById('result-winner').textContent = fight.winner;
+  // Health bar fills
+  const hbFillA = document.getElementById('hb-fill-a');
+  const hbFillB = document.getElementById('hb-fill-b');
+  if (fight.f1Wins) {
+    hbFillA.className = 'health-bar-fill-winner';
+    hbFillB.className = 'health-bar-fill-loser';
+    document.getElementById('hb-name-a').className = 'health-bar-name health-bar-name-winner';
+    document.getElementById('hb-name-b').className = 'health-bar-name health-bar-name-loser';
+  } else {
+    hbFillA.className = 'health-bar-fill-loser';
+    hbFillB.className = 'health-bar-fill-winner';
+    document.getElementById('hb-name-a').className = 'health-bar-name health-bar-name-loser';
+    document.getElementById('hb-name-b').className = 'health-bar-name health-bar-name-winner';
+  }
+
+  // Winner and loser names
+  const winnerName = fight.f1Wins ? fight.f1 : fight.f2;
+  const loserName = fight.f1Wins ? fight.f2 : fight.f1;
+  const winnerImgUrl = fight.f1Wins ? fight.imgA : fight.imgB;
+  const loserImgUrl = fight.f1Wins ? fight.imgB : fight.imgA;
+
+  document.getElementById('name-winner').textContent = winnerName;
+  document.getElementById('name-loser').textContent = loserName;
+  document.getElementById('result-winner').textContent = winnerName;
   document.getElementById('result-reasoning').textContent = fight.reasoning;
 
-  document.getElementById('card-a').classList.toggle('is-winner', fight.f1Wins);
-  document.getElementById('card-b').classList.toggle('is-winner', !fight.f1Wins);
-
   // Images
-  [[imgElA, statusA, 'save-a', fight.f1, fight.imgA],
-   [imgElB, statusB, 'save-b', fight.f2, fight.imgB]].forEach(([imgEl, statEl, saveId, name, url]) => {
+  [[document.getElementById('img-winner'), document.getElementById('status-winner'), 'save-winner', winnerName, winnerImgUrl],
+   [document.getElementById('img-loser'), document.getElementById('status-loser'), 'save-loser', loserName, loserImgUrl]].forEach(([imgEl, statEl, saveId, name, url]) => {
     const saveBtn = document.getElementById(saveId);
     if (url) {
       if (!url.startsWith('data:')) imgEl.crossOrigin = 'anonymous';
@@ -189,15 +216,13 @@ function showFightResult(fight) {
     } else {
       imgEl.hidden = true;
       statEl.textContent = 'Image unavailable';
-      statEl.classList.remove('is-loading');
       statEl.hidden = false;
       saveBtn.hidden = true;
     }
   });
 
-  document.getElementById('result-loading').hidden = true;
-  document.getElementById('result-content').hidden = false;
   showView('view-result');
+  launchConfetti();
 }
 
 // --- Loading facts ---
@@ -252,41 +277,18 @@ document.getElementById('fight-btn').addEventListener('click', async () => {
   const f2 = document.getElementById('fighter2').value.trim();
 
   if (!f1 || !f2) {
-    document.querySelector('.error-icon').textContent = '!';
-    document.getElementById('error-message').textContent = 'Hold up! You need two fighters in the ring — fill in both names and let\'s get it on!';
-    showView('view-error');
+    showError(
+      'Hold up! You need two fighters in the ring — fill in both names and let\'s get it on!',
+      'Missing fighter', '!', '72px'
+    );
     return;
   }
 
-  // Show result view in loading state
-  document.getElementById('result-loading').hidden = false;
-  document.getElementById('result-content').hidden = true;
-
-  // Set fighter names in loader
+  // Show loading view
   document.getElementById('loader-name-a').textContent = f1;
   document.getElementById('loader-name-b').textContent = f2;
   startFactTicker(f1, f2);
-
-  ['img-a', 'img-b'].forEach(id => {
-    const el = document.getElementById(id);
-    el.src = '';
-    el.hidden = true;
-  });
-  ['status-a', 'status-b'].forEach(id => {
-    const el = document.getElementById(id);
-    el.textContent = 'Generating...';
-    el.classList.add('is-loading');
-    el.hidden = false;
-  });
-  ['card-a', 'card-b'].forEach(id => document.getElementById(id).classList.remove('is-winner'));
-  ['save-a', 'save-b'].forEach(id => {
-    const el = document.getElementById(id);
-    el.hidden = true;
-    el.textContent = 'Save';
-    el.classList.remove('is-saved');
-  });
-
-  showView('view-result');
+  showView('view-loading');
 
   // Fire verdict + both images in parallel
   const verdictPromise = fetch('/api/fight', {
@@ -300,67 +302,53 @@ document.getElementById('fight-btn').addEventListener('click', async () => {
 
   const [data, imgA, imgB] = await Promise.all([verdictPromise, imgAPromise, imgBPromise]);
 
+  stopFactTicker();
+
   if (!data) {
-    stopFactTicker();
-    document.querySelector('.error-icon').textContent = '!';
-    document.getElementById('error-message').textContent = 'The arena lost power! We can\'t reach the fight server — check your connection and step back in.';
-    showView('view-error');
+    showError(
+      'The arena lost power! We can\'t reach the fight server — check your connection and step back in.',
+      'Power out', '!', '72px'
+    );
     return;
   }
 
   if (!data.valid) {
-    stopFactTicker();
-    const errorEl = document.getElementById('error-message');
-    const errorIcon = document.querySelector('.error-icon');
     if (data.rateLimited) {
-      errorEl.textContent = data.error;
-      errorIcon.textContent = '\u23F1';
+      showError(data.error, 'Cooldown', '\u23F1', '52px');
     } else {
-      errorEl.textContent = data.error || 'Something went sideways in the ring! Shake it off and try again.';
-      errorIcon.textContent = '!';
+      showError(
+        data.error || 'Something went sideways in the ring! Shake it off and try again.',
+        'Failed weigh-in', '!', '72px'
+      );
     }
-    showView('view-error');
     return;
   }
 
-  // Preload images before revealing
-  const imgElA = document.getElementById('img-a');
-  const imgElB = document.getElementById('img-b');
-  const statusA = document.getElementById('status-a');
-  const statusB = document.getElementById('status-b');
-
-  const [loadedA, loadedB] = await Promise.all([
-    preloadIntoImg(imgElA, imgA.url),
-    preloadIntoImg(imgElB, imgB.url),
-  ]);
-
-  if (loadedA) { imgElA.hidden = false; statusA.hidden = true; }
-  else { statusA.classList.remove('is-loading'); statusA.textContent = imgA.blocked ? 'Content blocked' : 'Image unavailable'; }
-
-  if (loadedB) { imgElB.hidden = false; statusB.hidden = true; }
-  else { statusB.classList.remove('is-loading'); statusB.textContent = imgB.blocked ? 'Content blocked' : 'Image unavailable'; }
-
-  document.getElementById('name-a').textContent = f1;
-  document.getElementById('name-b').textContent = f2;
-  document.getElementById('result-winner').textContent = data.winner;
-  document.getElementById('result-reasoning').textContent = data.reasoning;
-
   const f1Wins = data.winner.toLowerCase().includes(f1.toLowerCase()) ||
                  f1.toLowerCase().includes(data.winner.toLowerCase());
-  document.getElementById('card-a').classList.toggle('is-winner', f1Wins);
-  document.getElementById('card-b').classList.toggle('is-winner', !f1Wins);
 
-  // Show save buttons
-  const dex = loadDex();
-  [['save-a', f1, loadedA], ['save-b', f2, loadedB]].forEach(([saveId, name, loaded]) => {
-    if (!loaded) return;
-    const btn = document.getElementById(saveId);
-    if (dex.some(e => e.name.toLowerCase() === name.toLowerCase())) {
-      btn.textContent = 'Saved';
-      btn.classList.add('is-saved');
-    }
-    btn.hidden = false;
-  });
+  // Preload images into result view elements
+  const winnerName = f1Wins ? f1 : f2;
+  const loserName = f1Wins ? f2 : f1;
+  const winnerImg = f1Wins ? imgA : imgB;
+  const loserImg = f1Wins ? imgB : imgA;
+
+  const imgWinnerEl = document.getElementById('img-winner');
+  const imgLoserEl = document.getElementById('img-loser');
+  const statusWinner = document.getElementById('status-winner');
+  const statusLoser = document.getElementById('status-loser');
+
+  // Reset states
+  imgWinnerEl.hidden = true; imgLoserEl.hidden = true;
+  statusWinner.hidden = false; statusLoser.hidden = false;
+  statusWinner.textContent = 'Loading...'; statusLoser.textContent = 'Loading...';
+  document.getElementById('save-winner').hidden = true;
+  document.getElementById('save-loser').hidden = true;
+
+  const [loadedW, loadedL] = await Promise.all([
+    preloadIntoImg(imgWinnerEl, winnerImg.url),
+    preloadIntoImg(imgLoserEl, loserImg.url),
+  ]);
 
   // Save last fight
   saveLastFight({
@@ -372,27 +360,31 @@ document.getElementById('fight-btn').addEventListener('click', async () => {
     imgB: imgB.url,
   });
 
-  stopFactTicker();
-  document.getElementById('result-loading').hidden = true;
-  document.getElementById('result-content').hidden = false;
-  launchConfetti();
+  showFightResult({
+    f1, f2,
+    winner: data.winner,
+    reasoning: data.reasoning,
+    f1Wins,
+    imgA: imgA.url,
+    imgB: imgB.url,
+  });
 });
 
 // Save button handlers
-document.getElementById('save-a').addEventListener('click', async () => {
-  const name = document.getElementById('name-a').textContent;
-  const imgEl = document.getElementById('img-a');
-  const btn = document.getElementById('save-a');
+document.getElementById('save-winner').addEventListener('click', async () => {
+  const name = document.getElementById('name-winner').textContent;
+  const imgEl = document.getElementById('img-winner');
+  const btn = document.getElementById('save-winner');
   if (await saveFighter(name, imgEl)) {
     btn.textContent = 'Saved';
     btn.classList.add('is-saved');
   }
 });
 
-document.getElementById('save-b').addEventListener('click', async () => {
-  const name = document.getElementById('name-b').textContent;
-  const imgEl = document.getElementById('img-b');
-  const btn = document.getElementById('save-b');
+document.getElementById('save-loser').addEventListener('click', async () => {
+  const name = document.getElementById('name-loser').textContent;
+  const imgEl = document.getElementById('img-loser');
+  const btn = document.getElementById('save-loser');
   if (await saveFighter(name, imgEl)) {
     btn.textContent = 'Saved';
     btn.classList.add('is-saved');
@@ -416,6 +408,5 @@ if (params.get('lastfight') === '1') {
   if (fight) {
     showFightResult(fight);
   }
-  // Clean up URL
   history.replaceState(null, '', '/');
 }
