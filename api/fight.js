@@ -50,13 +50,17 @@ module.exports = async function handler(req, res) {
 
   const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
   if (isRateLimited(ip)) {
-    return res.status(429).json({ valid: false, rateLimited: true, error: 'Slow down! Max 5 fights per minute.' });
+    return res.status(429).json({ valid: false, rateLimited: true, error: 'Whoa there, champ! The arena needs a breather — 5 fights per minute max. Cool down and come back swinging!' });
   }
 
   const { fighter1, fighter2 } = req.body;
 
   if (!fighter1?.trim() || !fighter2?.trim()) {
-    return res.status(400).json({ valid: false, error: 'Two fighter names are required.' });
+    return res.status(400).json({ valid: false, error: 'We need TWO names in the ring! Can\'t have a fight with an empty corner.' });
+  }
+
+  if (fighter1.trim().length > 50 || fighter2.trim().length > 50) {
+    return res.status(400).json({ valid: false, error: 'That name\'s longer than a boxing match! Keep it under 50 characters — just the fighter\'s name, no autobiography.' });
   }
 
   let verdict;
@@ -79,7 +83,7 @@ module.exports = async function handler(req, res) {
     });
 
     if (!claudeRes.ok) {
-      return res.status(502).json({ valid: false, error: 'Failed to reach verdict service. Try again.' });
+      return res.status(502).json({ valid: false, error: 'The judges left the building! Our verdict crew is unreachable — give it another shot.' });
     }
 
     const claudeData = await claudeRes.json();
@@ -88,15 +92,15 @@ module.exports = async function handler(req, res) {
     const match = raw.match(/\{[\s\S]*\}/);
     verdict = JSON.parse(match ? match[0] : raw);
   } catch {
-    return res.status(502).json({ valid: false, error: 'Failed to process verdict. Try again.' });
+    return res.status(502).json({ valid: false, error: 'The scorecard got lost in the chaos! The judges fumbled — step back in the ring and try again.' });
   }
 
   if (!verdict.valid) {
-    return res.status(200).json({ valid: false, error: verdict.error || 'Invalid fighters.' });
+    return res.status(200).json({ valid: false, error: verdict.error || 'Those names didn\'t pass the weigh-in! Drop some real athletes in there.' });
   }
 
   if (!verdict.winner || !verdict.loser || !verdict.reasoning) {
-    return res.status(502).json({ valid: false, error: 'Incomplete verdict received. Try again.' });
+    return res.status(502).json({ valid: false, error: 'The judges couldn\'t agree on a winner! That\'s a first. Run it back!' });
   }
 
   return res.status(200).json({

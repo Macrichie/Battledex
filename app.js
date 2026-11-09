@@ -253,7 +253,7 @@ document.getElementById('fight-btn').addEventListener('click', async () => {
 
   if (!f1 || !f2) {
     document.querySelector('.error-icon').textContent = '!';
-    document.getElementById('error-message').textContent = 'Enter two fighters before hitting Fight.';
+    document.getElementById('error-message').textContent = 'Hold up! You need two fighters in the ring — fill in both names and let\'s get it on!';
     showView('view-error');
     return;
   }
@@ -303,7 +303,7 @@ document.getElementById('fight-btn').addEventListener('click', async () => {
   if (!data) {
     stopFactTicker();
     document.querySelector('.error-icon').textContent = '!';
-    document.getElementById('error-message').textContent = 'Could not reach the server. Try again.';
+    document.getElementById('error-message').textContent = 'The arena lost power! We can\'t reach the fight server — check your connection and step back in.';
     showView('view-error');
     return;
   }
@@ -316,7 +316,7 @@ document.getElementById('fight-btn').addEventListener('click', async () => {
       errorEl.textContent = data.error;
       errorIcon.textContent = '\u23F1';
     } else {
-      errorEl.textContent = data.error || 'Something went wrong. Try again.';
+      errorEl.textContent = data.error || 'Something went sideways in the ring! Shake it off and try again.';
       errorIcon.textContent = '!';
     }
     showView('view-error');
