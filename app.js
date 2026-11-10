@@ -67,18 +67,6 @@ function launchConfetti() {
 
 // --- BattleDex storage ---
 
-const DEX_KEY = 'battledex';
-const LAST_FIGHT_KEY = 'lastFight';
-
-function loadDex() {
-  try { return JSON.parse(localStorage.getItem(DEX_KEY)) || []; }
-  catch { return []; }
-}
-
-function saveDex(dex) {
-  localStorage.setItem(DEX_KEY, JSON.stringify(dex));
-}
-
 function getLastFight() {
   try { return JSON.parse(localStorage.getItem(LAST_FIGHT_KEY)); }
   catch { return null; }
@@ -350,46 +338,26 @@ document.getElementById('fight-btn').addEventListener('click', async () => {
     preloadIntoImg(imgLoserEl, loserImg.url),
   ]);
 
-  // Save last fight
-  saveLastFight({
-    f1, f2,
-    winner: data.winner,
-    reasoning: data.reasoning,
-    f1Wins,
-    imgA: imgA.url,
-    imgB: imgB.url,
-  });
-
-  showFightResult({
-    f1, f2,
-    winner: data.winner,
-    reasoning: data.reasoning,
-    f1Wins,
-    imgA: imgA.url,
-    imgB: imgB.url,
-  });
+  const fight = { f1, f2, winner: data.winner, reasoning: data.reasoning, f1Wins, imgA: imgA.url, imgB: imgB.url };
+  saveLastFight(fight);
+  showFightResult(fight);
 });
 
 // Save button handlers
-document.getElementById('save-winner').addEventListener('click', async () => {
-  const name = document.getElementById('name-winner').textContent;
-  const imgEl = document.getElementById('img-winner');
-  const btn = document.getElementById('save-winner');
-  if (await saveFighter(name, imgEl)) {
-    btn.textContent = 'Saved';
-    btn.classList.add('is-saved');
-  }
-});
+function attachSaveHandler(nameId, imgId, btnId) {
+  const btn = document.getElementById(btnId);
+  btn.addEventListener('click', async () => {
+    const name = document.getElementById(nameId).textContent;
+    const imgEl = document.getElementById(imgId);
+    if (await saveFighter(name, imgEl)) {
+      btn.textContent = 'Saved';
+      btn.classList.add('is-saved');
+    }
+  });
+}
 
-document.getElementById('save-loser').addEventListener('click', async () => {
-  const name = document.getElementById('name-loser').textContent;
-  const imgEl = document.getElementById('img-loser');
-  const btn = document.getElementById('save-loser');
-  if (await saveFighter(name, imgEl)) {
-    btn.textContent = 'Saved';
-    btn.classList.add('is-saved');
-  }
-});
+attachSaveHandler('name-winner', 'img-winner', 'save-winner');
+attachSaveHandler('name-loser', 'img-loser', 'save-loser');
 
 document.getElementById('back-btn').addEventListener('click', () => {
   updateDexLink();

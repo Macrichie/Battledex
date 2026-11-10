@@ -1,15 +1,4 @@
-const DEX_KEY = 'battledex';
-const LAST_FIGHT_KEY = 'lastFight';
 const COLORS = ['#ff3a4c', '#2e8bff', '#ffd23f', '#b56bff'];
-
-function loadDex() {
-  try { return JSON.parse(localStorage.getItem(DEX_KEY)) || []; }
-  catch { return []; }
-}
-
-function saveDex(dex) {
-  localStorage.setItem(DEX_KEY, JSON.stringify(dex));
-}
 
 function renderDex() {
   const dex = loadDex();
