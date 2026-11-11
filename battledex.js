@@ -23,24 +23,23 @@ function renderDex() {
     div.innerHTML = `
       <div class="dex-card-header">
         <span class="dex-card-num">${num}</span>
-        <button class="dex-card-remove" data-index="${i}">&times;</button>
+        <button class="dex-card-remove">&times;</button>
       </div>
       <div class="dex-card-img">
         <img src="${entry.image}" alt="${entry.name}">
       </div>
       <div class="dex-card-name">${entry.name}</div>
     `;
+    div.querySelector('.dex-card-remove').dataset.name = entry.name;
     gallery.appendChild(div);
   });
 }
 
 // Remove entry
-document.getElementById('dex-gallery').addEventListener('click', (e) => {
+document.getElementById('dex-gallery').addEventListener('click', async (e) => {
   const btn = e.target.closest('.dex-card-remove');
   if (!btn) return;
-  const dex = loadDex();
-  dex.splice(Number(btn.dataset.index), 1);
-  saveDex(dex);
+  await removeFighter(btn.dataset.name);
   renderDex();
 });
 
@@ -61,9 +60,9 @@ const clearModal = document.getElementById('clear-modal');
 
 clearBtn.addEventListener('click', () => { clearModal.hidden = false; });
 
-document.getElementById('clear-confirm').addEventListener('click', () => {
+document.getElementById('clear-confirm').addEventListener('click', async () => {
   clearModal.hidden = true;
-  saveDex([]);
+  await clearAllFighters();
   renderDex();
 });
 
@@ -75,4 +74,8 @@ clearModal.addEventListener('click', (e) => {
   if (e.target === clearModal) clearModal.hidden = true;
 });
 
-renderDex();
+// Init: auth first, then render
+initAuth().then(() => {
+  renderAuthUI();
+  renderDex();
+});

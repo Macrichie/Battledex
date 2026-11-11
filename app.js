@@ -100,10 +100,9 @@ async function saveFighter(name, imgEl) {
   const dex = loadDex();
   if (dex.some(e => e.name.toLowerCase() === name.toLowerCase())) return false;
   const image = await downsizeImage(imgEl);
-  dex.push({ name, image });
-  saveDex(dex);
-  updateDexLink();
-  return true;
+  const saved = await addFighter(name, image);
+  if (saved) updateDexLink();
+  return saved;
 }
 
 // --- Fight flow ---
@@ -367,14 +366,15 @@ document.getElementById('error-back-btn').addEventListener('click', () => showVi
 
 // --- Init ---
 
-updateDexLink();
+initAuth().then(() => {
+  renderAuthUI();
+  updateDexLink();
 
-// Check for ?lastfight=1 param (from BattleDex page)
-const params = new URLSearchParams(window.location.search);
-if (params.get('lastfight') === '1') {
-  const fight = getLastFight();
-  if (fight) {
-    showFightResult(fight);
+  // Check for ?lastfight=1 param (from BattleDex page)
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('lastfight') === '1') {
+    const fight = getLastFight();
+    if (fight) showFightResult(fight);
+    history.replaceState(null, '', '/');
   }
-  history.replaceState(null, '', '/');
-}
+});

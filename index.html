@@ -10,13 +10,17 @@
 </head>
 <body>
 
-  <!-- ===== INPUT VIEW ===== -->
-  <section id="view-input" class="view active">
-    <div class="grid-floor"></div>
+  <nav class="top-bar">
     <a id="dex-link" href="/battledex.html" class="dex-nav" hidden>
       <span class="dex-nav-label">BattleDex</span>
       <span id="dex-count" class="dex-nav-count">0</span>
     </a>
+    <div id="auth-container" class="auth-container"></div>
+  </nav>
+
+  <!-- ===== INPUT VIEW ===== -->
+  <section id="view-input" class="view active">
+    <div class="grid-floor"></div>
     <div class="input-content">
       <div class="choose-text">Choose your fighters</div>
       <h1 class="main-title">BATTLEGROUND</h1>
@@ -157,7 +161,9 @@
   <!-- Confetti canvas -->
   <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="storage.js"></script>
+  <script src="auth-ui.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
